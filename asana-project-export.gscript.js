@@ -15,11 +15,6 @@ function GetProjects()
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('Live source data');
 
-  var rangesToClear = ['A3:K1000'];
-  for (var i=0; i<rangesToClear.length; i++) {
-	   sheet.getRange(rangesToClear[i]).clearContent();
-  }
-
   var projects = [];
   var offset = "";
   var options = { "method" : "get"};
@@ -53,6 +48,11 @@ function GetProjects()
   Logger.log("Projects:\n" + projects);
 
   //throw new Error("Got all the projects! :D");
+
+  var rangesToClear = ['A3:K1000'];
+  for (var i=0; i<rangesToClear.length; i++) {
+	   sheet.getRange(rangesToClear[i]).clearContent();
+  }
 
   var currentRow=3; // Skip title rows
   for(var i in projects)
