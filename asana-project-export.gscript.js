@@ -26,7 +26,6 @@ function GetTeams(workspace)
   options.headers = AuthData();
   options.headers["Asana-Fast-Api"] = "true";
 
-  var x = 0;
   do
   {
     var urlpath = "https://app.asana.com/api/1.0/organizations/" + workspace + "/teams?limit=100";
@@ -48,7 +47,6 @@ function GetTeams(workspace)
     {
       teams.push(data[i].id);
     }
-    x++;
   } while (offset != '');
 
   //Logger.log("Teams:\n" + teams);
@@ -65,24 +63,27 @@ function GetProjectsFromTeams(arrTeams)
 
 	for(var i in arrTeams)
 	{
-    var urlpath = "https://app.asana.com/api/1.0/teams/" + arrTeams[i] + "/projects?archived=false&limit=100";
-    if (offset != null && offset !== '')
-      urlpath += "&offset=" + offset;
+		do
+		{
+			var urlpath = "https://app.asana.com/api/1.0/teams/" + arrTeams[i] + "/projects?archived=false&limit=100";
+	    if (offset != null && offset !== '')
+	      urlpath += "&offset=" + offset;
 
-    var response = UrlFetchApp.fetch(urlpath, options);
+	    var response = UrlFetchApp.fetch(urlpath, options);
 
-    jResponse = JSON.parse (response);
-    if (jResponse.next_page != null && jResponse.next_page.offset != null)
-      offset = jResponse.next_page.offset;
-    else
-      offset = '';
+	    jResponse = JSON.parse (response);
+	    if (jResponse.next_page != null && jResponse.next_page.offset != null)
+	      offset = jResponse.next_page.offset;
+	    else
+	      offset = '';
 
-    var data = jResponse.data;
+	    var data = jResponse.data;
 
-    for(var x in data)
-    {
-      projects.push(data[x].id);
-    }
+	    for(var x in data)
+	    {
+	      projects.push(data[x].id);
+	    }
+		} while (offset != '');
   }
 
 	return projects;
